@@ -18,3 +18,37 @@ app.innerHTML = `
         <ul class="todos-list"></ul>
     </div>
 `;
+
+//state
+let todos = [];
+
+
+// selectors
+const form = document.forms.todos;
+const input = form.elements.todo;
+
+//functions
+function addTodo(event) {
+    event.preventDefault();
+    const label = input.value.trim();
+    const complete = false;
+    todos = [
+        ...todos,
+        {
+            label,
+            complete
+        }
+    ]
+
+    console.log(todos);
+
+    input.value='';
+}
+
+// init
+function init() {
+    // Add todo
+    form.addEventListener('submit', addTodo);
+}
+
+init();
