@@ -92,6 +92,48 @@ function updateTodo(event) {
     saveToStorage(todos);
 }
 
+function editTodo(event) {
+    if (event.target.nodeName.toLowerCase() !== 'span') {
+        return;
+    }
+    const id = +event.target.parentElement.getAttribute('data-id');
+    const todoLabel = todos[id].label;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = todoLabel;
+
+    function handleEdit(event) {
+        event.stopPropagation();
+
+        const label = this.value;
+        if (this.value !== todoLabel) {
+            todos = todos.map((todo, index) => {
+                if (index === id) {
+                    return {
+                        ...todo,
+                        label
+                    };
+                }
+
+                return todo;
+            });
+
+            renderTodos(todos);
+            saveToStorage(todos);
+        }
+        // clean up
+        event.target.style.display = '';
+        this.removeEventListener('change', handleEdit);
+        this.remove();
+    }
+
+    event.target.style.style = 'none';
+    event.target.parentElement.append(input);
+    input.addEventListener('change', handleEdit);
+    input.focus();
+}
+
 function deleteTodo(event) {
     if (event.target.nodeName.toLowerCase() !== 'button')
         return;
@@ -127,6 +169,9 @@ function init() {
 
     // Update Todo
     list.addEventListener('change', updateTodo);
+
+    // Edit Todo
+    list.addEventListener('dblclick', editTodo);
 
     // Delete Todo
     list.addEventListener('click', deleteTodo);
