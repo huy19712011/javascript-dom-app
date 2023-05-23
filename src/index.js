@@ -84,6 +84,17 @@ function updateTodo(event) {
     renderTodos(todos);
 }
 
+function deleteTodo(event) {
+    if (event.target.nodeName.toLowerCase() !== 'button')
+        return;
+    const id = +event.target.parentElement.getAttribute('data-id');
+    const label = event.target.previousElementSibling.innerText;
+    if (window.confirm(`Delete ${label}?`)) {
+        todos = todos.filter((todo, index) => index !== id);
+        renderTodos(todos);
+    }
+}
+
 // init
 function init() {
     // Add todo
@@ -91,6 +102,9 @@ function init() {
 
     // Update Todo
     list.addEventListener('change', updateTodo);
+
+    // Delete Todo
+    list.addEventListener('click', deleteTodo);
 }
 
 init();
