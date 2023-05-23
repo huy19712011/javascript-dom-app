@@ -20,7 +20,7 @@ app.innerHTML = `
 `;
 
 //state
-let todos = [];
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
 
 
 // selectors
@@ -32,6 +32,10 @@ const form = document.forms.todos;
 const input = form.elements.todo;
 
 //functions
+
+function saveToStorage(todos) {
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
 function renderTodos(todos) {
     let todoString = '';
 
@@ -62,6 +66,7 @@ function addTodo(event) {
     ]
 
     renderTodos(todos);
+    saveToStorage(todos);
 
     input.value='';
 }
@@ -82,8 +87,9 @@ function updateTodo(event) {
 
         return todo;
     });
-    console.log(todos);
+    // console.log(todos);
     renderTodos(todos);
+    saveToStorage(todos);
 }
 
 function deleteTodo(event) {
@@ -94,6 +100,7 @@ function deleteTodo(event) {
     if (window.confirm(`Delete ${label}?`)) {
         todos = todos.filter((todo, index) => index !== id);
         renderTodos(todos);
+        saveToStorage(todos);
     }
 }
 
@@ -107,11 +114,14 @@ function clearCompleteTodos() {
         todos = todos.filter(todo => !todo.complete);
 
         renderTodos(todos);
+        saveToStorage(todos);
     }
 }
 
 // init
 function init() {
+    renderTodos(todos);
+
     // Add todo
     form.addEventListener('submit', addTodo);
 
